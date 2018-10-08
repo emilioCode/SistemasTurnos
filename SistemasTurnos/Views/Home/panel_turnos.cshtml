@@ -1,0 +1,136 @@
+﻿@*@{
+        Layout = null;
+    }
+
+    <!DOCTYPE html>
+
+    <html>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <title>panel_turnos</title>
+    </head>
+    <body>
+        <div>
+        </div>
+    </body>
+    </html>*@
+
+
+
+@{
+    //var title = "PANTALLA DE ESPERA";
+    Layout = null;
+
+}
+
+
+
+
+<!DOCTYPE html>
+<html ng-app="myApp" ng-controller="turnosController" >
+<head>
+    <meta name="viewport" content="width=device-width" />
+
+    <title>@*SISTEMA DE TURNOS*@{{ title }}</title>
+    <script src="~/Scripts/angular.min.js"></script>
+    <script src="~/Scripts/Controller.js"></script>
+
+    @Styles.Render("~/Content/css")
+
+    <style>
+
+        .center {
+            text-align: center;
+        }
+
+        .turnos {
+            margin-bottom: 2px;
+        }
+
+        body {
+            background-color: #328cdd;
+        }
+
+        .mostrar {
+            visibility: visible;
+        }
+
+        .ocultar {
+            display: none;
+        }
+    </style>
+
+
+    <!--CSS Dependences-->
+    <link href="~/admin-lte/css/AdminLTE.min.css" rel="stylesheet" />
+    <link href="~/Content/angular-material.css" rel="stylesheet" />
+
+</head>
+<body>
+    <div class="content id=panel_turnos" >
+        <div class="box box-danger">
+            <div class="box-body">
+                <div class="container" style="height:90%; width:90%;" >
+                    <h2 class=center>{{ title2 }}</h2>
+
+                    <div id="ventanilla_1" @*class="ocultar"*@>
+                        <div class="col-md-6 center">
+                            <div class="alert" style="background-color:#dd4b39; color:#ffffff;" role="alert">
+                                <h2><strong>TURNO</strong></h2>
+                            </div>
+                            <div class="list-group">
+                                <span class="alert list-group-item list-group-item-action list-group-item-danger turnos" ng-repeat="turno in TicketsWaiting"><r style="color:black;font-size:35px;">{{ turno.ticket }} -> {{ turno.usuario }}</r></span>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-6 center">
+                            <div class="alert" style="background-color:#328CDD; color:#ffffff" role="alert">
+                                <h2><strong>LEYENDA</strong></h2>
+                            </div>
+                            <div class="list-group">
+                                <span @*id="despachado"*@ class="alert list-group-item list-group-item-action list-group-item-info turnos" ng-repeat="servicio in servicios"><r style="color:black;font-size:35px;">({{ servicio.TipoServicio }}) &nbsp; {{ servicio.CodigoServicio }}</r></span>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    @*<div id="ventanilla_2" class="mostrar">
+
+                            <div class="col-md-12 center">
+                                <div class="alert" style="background-color:#ffd700; color:#ffffff;"  role="alert">
+                                    <h2><strong>EN ESPERA</strong></h2>
+                                </div>
+                                <div class="list-group">
+                                    <span class="alert list-group-item list-group-item-action list-group-item-warning turnos" ng-repeat="turno in enEspera"><r style="color:black; font-size:35px;">(T-{{turno.Puerta}}) {{turno.NombreProveedor}}</r></span>
+
+                                </div>
+
+                            </div>
+
+                        </div>*@
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- REQUIRED JS SCRIPTS -->
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")            
+    <!--More JS Dependences-->
+    <script src="~/admin-lte/js/adminlte.min.js"></script>
+
+
+    <!--AnguarJS MAterial Dependences-->
+
+    <script src="~/Scripts/angular-animate.min.js"></script>
+    <script src="~/Scripts/angular-aria.min.js"></script>
+
+
+
+
+
+    <script src="~/Scripts/Controller.js"></script>
+</body>
+  </html>

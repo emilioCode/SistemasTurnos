@@ -1,0 +1,48 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+<div ng-controller="HomeController">
+    <div class="jumbotron">
+        <h1>Bienvenidos</h1>
+        <p class="lead">Si desea tomar un turno, hacer click aquí</p>
+        <p><a class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">Generar Turno &raquo;</a>&nbsp;<a class="btn btn-danger btn-lg" href="/Home/Login">Acceder &raquo;</a></p>
+    </div>
+
+ 
+
+    <div class="container">
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">SOLICITUD DE TURNO</h4>
+                    </div>
+                    <div class="modal-body">
+                        @*<p>Some text in the modal.</p>*@
+                        <div class="form-inline">
+                            <div class="form-group">
+                                <label> Seleccione el tipo de servicio a realizar</label>
+                                <select ng-model="tipoServicio" class="form-control">
+                                    @*<option value="null"></option>*@
+                                    <option value="{{ servicio.id }}" ng-repeat="servicio in servicios">{{ servicio.TipoServicio }}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="setTurno(tipoServicio)">Generar</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>

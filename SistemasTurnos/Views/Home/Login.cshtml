@@ -1,0 +1,562 @@
+﻿
+@{
+    ViewBag.Title = "Login";
+}
+
+
+@*<style>
+body {font-family: Arial, Helvetica, sans-serif;}
+form {border: 3px solid #f1f1f1;}
+
+input[type=text], input[type=password] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+.cancelbtn {
+    width: auto;
+    padding: 10px 18px;
+    background-color: #f44336;
+}
+
+.imgcontainer {
+    text-align: center;
+    margin: 24px 0 12px 0;
+}
+
+img.avatar {
+    width: 40%;
+    border-radius: 50%;
+}
+
+.container {
+    padding: 16px;
+}
+
+span.psw {
+    float: right;
+    padding-top: 16px;
+}
+
+/* Change styles for span and cancel button on extra small screens */
+@@media screen and (max-width: 300px) {
+    span.psw {
+       display: block;
+       float: none;
+    }
+    .cancelbtn {
+       width: 100%;
+    }
+}
+</style>*@
+<style>
+body#LoginForm{ background-image:url("https://hdwallsource.com/img/2014/9/blur-26347-27038-hd-wallpapers.jpg"); background-repeat:no-repeat; background-position:center; background-size:cover; padding:10px;}
+
+.form-heading { color:#fff; font-size:23px;}
+.panel h2{ color:#444444; font-size:18px; margin:0 0 8px 0;}
+.panel p { color:#777777; font-size:14px; margin-bottom:30px; line-height:24px;}
+.login-form .form-control {
+  background: #f7f7f7 none repeat scroll 0 0;
+  border: 1px solid #d4d4d4;
+  border-radius: 4px;
+  font-size: 14px;
+  height: 50px;
+  line-height: 50px;
+}
+.main-div {
+  background: #ffffff none repeat scroll 0 0;
+  border-radius: 2px;
+  margin: 10px auto 30px;
+  max-width: 38%;
+  padding: 50px 70px 70px 71px;
+}
+
+.login-form .form-group {
+  margin-bottom:10px;
+}
+.login-form{ text-align:center;}
+.forgot a {
+  color: #777777;
+  font-size: 14px;
+  text-decoration: underline;
+}
+.login-form  .btn.btn-primary {
+  background: #f0ad4e none repeat scroll 0 0;
+  border-color: #f0ad4e;
+  color: #ffffff;
+  font-size: 14px;
+  width: 100%;
+  height: 50px;
+  line-height: 50px;
+  padding: 0;
+}
+.forgot {
+  text-align: left; margin-bottom:30px;
+}
+.botto-text {
+  color: #ffffff;
+  font-size: 14px;
+  margin: auto;
+}
+.login-form .btn.btn-primary.reset {
+  background: #ff9900 none repeat scroll 0 0;
+}
+.back { text-align: left; margin-top:10px;}
+.back a {color: #444444; font-size: 13px;text-decoration: none;}
+
+.error{
+    color:red;
+}
+
+.table-header{
+    background:#0d97e8;
+    color:#fff;
+    text-align:center;
+}
+
+.center{
+    text-align:center;
+}
+
+
+</style>
+
+
+
+<div class="container" ng-controller="LoginController" ng-cloak>
+
+    
+
+    
+    <div ng-if="userAccount==null">
+        <h1 class="form-heading">login Form</h1>
+        <div class="login-form">
+            <div class="main-div">
+                <div class="panel">
+                    
+                        <span class="glyphicon glyphicon-user" ></span>
+                    
+                    <h2>Login</h2>
+                    <p>Introduzca su usuario y su contraseña</p>
+                </div>
+                <form id="Login">
+                    <div class="form-group">
+
+                        <input type="text" class="form-control" id="inputUser" placeholder="Usuario" ng-model="userName">
+                        <span ng-show="error_usuario" class="error">Introduzca el usuario</span>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" id="inputPassword" placeholder="Contraseña" ng-model="password">
+                    </div>
+                    
+                    <button class="btn btn-primary" ng-click="logearse(userName, password)">Login</button>
+                    <span ng-show="error_login" class="error">Acceso denegado, intentelo de nuevo</span>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!---->
+    <br />
+    <div ng-if="userAccount!=null" class="container">
+        
+        <div class="col-md-8"><h4>Bienvenido Sr(a).: {{ userAccount.NombreCompleto }}</h4></div>
+        <div class="col-md-4">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalGenerateTurno">Generar Ticket</button>
+            <a href="/Home/Login" class="btn btn-danger"><span class="glyphicon glyphicon-off"></span> Cerrar sesión</a>
+
+          
+
+        </div>
+        
+        
+        <div class="col-md-12" ng-if="userAccount.Rol==1">
+            <hr />
+            <div class="col-md-9">
+                <h3>Sección de reportes</h3>
+                <!-- Triggers the modal with your buttons -->
+                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModalTurnosCola" ng-click="getTickets()">Turnos en cola</button>
+                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModalTurnosAtendidos">Turnos atendidos</button>
+                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModalTurnosAtendidosEjecutivos" ng-click="getTicketsforUser()">Turnos atendidos por ejecutivos</button>
+                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModalTurnosEnProceso" @*ng-click="getTicketsinProcess()"*@>Turnos en procesos</button>
+                <!-- Modals -->
+                <!-- Modal -->
+                <div class="modal fade" id="myModalTurnosCola" role="dialog">
+                    <div class="modal-dialog">
+
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">TURNOS EN COLA</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div style="overflow:scroll; height:200px;">
+                                    <table class="table table-striped table-hover">
+                                        <thead class="table-header">
+                                            <tr>
+                                                <td>TICKET</td>
+                                                <td>FECHA</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="ticket in tickets" class="center">
+                                                <td><span ng-repeat="service in servicios" ng-if="service.id==ticket.TipoServicio">{{ service.CodigoServicio }}-{{ ticket.Turno }}</span></td>
+                                                <td><span>{{ ticket.Fecha }}</span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal -->
+                <iv class="modal fade" id="myModalTurnosAtendidos" role="dialog">
+                    <div class="modal-dialog">
+
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">TURNOS ATENDIDOS Y TIEMPOS DE ATENCION</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div style="overflow:scroll; height:200px;">
+                                    <table class="table table-striped table-hover">
+                                        <thead class="table-header">
+                                            <tr>
+                                                <td>TICKET</td>
+                                                <td>FECHA</td>
+                                                <td>INICIO</td>
+                                                <td>FIN</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="ticket in allTicketsAtende" class="center">
+                                                <td><span ng-repeat="service in servicios" ng-if="service.id==ticket.TipoServicio">{{ service.CodigoServicio }}-{{ ticket.Turno }}</span></td>
+                                                <td><span>{{ ticket.Fecha }}</span></td>
+                                                <td>{{ ticket.Hora_inicio }}</td>
+                                                <td>{{ ticket.Hora_fin }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </iv>
+                <!-- Modal -->
+                <div class="modal fade" id="myModalTurnosAtendidosEjecutivos" role="dialog">
+                    <div class="modal-dialog">
+
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">TURNOS ATENDIDOS POR EJECUTIVOS Y SUS TIEMPOS</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <input type="text" ng-model="search" placeholder="Buscar..." class="form-control"/>
+                                </div>
+                                <div style="overflow:scroll; height:200px;">
+                                    <table class="table table-striped table-hover">
+                                        <thead class="table-header">
+                                            <tr>
+                                                <td>TICKET</td>
+                                                <td>FECHA</td>
+                                                <td>INICIO</td>
+                                                <td>FIN</td>
+                                                <td>ATENDIDO POR</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="ticket in TicketsforUser | filter: search" class="center">
+                                                <td>{{ ticket.tipoServicio }}-{{ ticket.turno }}</td>
+                                                <td>{{ ticket.fecha }}</td>
+                                                <td>{{ ticket.hora_inicio }}</td>
+                                                <td>{{ ticket.hora_fin }}</td>
+                                                <td>{{ ticket.usuario }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal en PRoceso-->
+                <div class="modal fade" id="myModalTurnosEnProceso" role="dialog">
+                    <div class="modal-dialog">
+
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">TURNOS EN PROCESO</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div style="overflow:scroll; height:200px;">
+                                    <table class="table table-striped table-hover">
+                                        <thead class="table-header">
+                                            <tr>
+                                                <td>TICKET</td>
+                                                <td>FECHA</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @*<tr ng-repeat="ticket in ticketsInProcess" class="center">
+                                                <td><span ng-repeat="service in servicios" ng-if="service.id==ticket.TipoServicio">{{ service.CodigoServicio }}-{{ ticket.Turno }}</span></td>
+                                                <td><span>{{ ticket.Fecha }}</span></td>
+                                            </tr>*@
+                                        </tbody>
+                                    </table>
+
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <h3>Otro Permisos</h3>
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModalcreateUser" ng-click="clearForm();">
+                    Crear usuario
+                </button>
+                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModalViewUser" ng-click="getUser()">Ver usuarios</button>
+            
+
+                <!-- Modal Usuario-->
+                <div class="modal fade" id="myModalcreateUser" role="dialog">
+                    <div class="modal-dialog">
+
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">FORMULARIO DE CREACION DE USUARIO</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-inline">
+                                    <div class="form-group">
+                                        <label>Nombre:</label>
+                                        <input type="text" placeholder="Nombre del usuario" ng-model="nameForm" class="form-control"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label> Permiso como:</label>
+                                        <select ng-model="rolForm" class="form-control">
+
+                                            <option value="{{ rol.id }}" ng-repeat="rol in roles">{{ rol.nombre }}</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>No. Documento:</label>
+                                        <input type="text" placeholder="No. Documento" ng-model="documentForm" class="form-control"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Cuenta de usuario:</label>
+                                        <input type="text" placeholder="Nombre del cuenta del usuario" ng-model="userForm" class="form-control"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Contraseña:</label>
+                                        <input type="password" placeholder="Contraseña" ng-model="pwdForm" class="form-control"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Comprobando Contraseña:</label><br />
+                                        <input type="password" placeholder="Contraseña" ng-model="pwd2Form" class="form-control" />
+                                        <span style="color:red;" ng-if="msg_pwd">contraseña invalida</span>
+                                    </div>
+                                    
+                                   
+                                    
+                                </div>
+                               
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="createUser(nameForm,documentForm,userForm,pwdForm,pwd2Form,rolForm)">Crear</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Modal ViewUsers-->
+                <div class="modal fade" id="myModalViewUser" role="dialog">
+                    <div class="modal-dialog">
+
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">REPORTE DE USUARIOS Y SUS PERMISOS</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <input type="text" ng-model="searchUser" placeholder="Buscar..." class="form-control"/>
+                                </div>
+                                <div style="overflow:scroll; height:200px;">
+                                    <table class="table table-striped table-hover">
+                                        <thead class="table-header">
+                                            <tr>
+                                                <td>NOMBRE</td>
+                                                <td>NO. DOCUMENTO</td>
+                                                <td>CUENTA</td>
+                                                <td>PERMISOS</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="user in users | filter: searchUser" class="center">
+                                                <td>{{ user.nombre }}</td>
+                                                <td>{{ user.noDocumento }}</td>
+                                                <td>{{ user.userName }}</td>
+                                                <td>{{ user.permisos }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+            
+            </div>
+            
+            
+
+            
+
+
+
+
+
+<!--Modals End-->
+            <hr /> 
+        </div>
+        
+
+        <div class="col-md-6">
+            <h3 ><a class="glyphicon glyphicon-refresh" ng-click="getTickets();clearForm();"></a> COLA DE CLIENTES POR ATENDER</h3>
+            @*<a class="btn btn-default" ng-click="getTickets()"></a>*@
+            <table class="table table-striped">
+                <thead class="table-header">
+                    <tr>
+                        <td>TICKET</td>
+                        <td>ATENDER</td>
+                        <td ng-if="userAccount.Rol==1">DESHABILITAR</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="ticket in tickets" class="center">
+                        <td><span ng-repeat="service in servicios" ng-if="service.id==ticket.TipoServicio">{{ service.CodigoServicio }}-{{ ticket.Turno }}</span></td>
+                        <td><button  ng-repeat="service in servicios" ng-if="service.id==ticket.TipoServicio" ng-disabled="ticket.no!=1 && (userAccount.Rol!=1 || ticketsFinishes.length>1)" class="btn btn-success" ng-click="atender(ticket.id,ticket.Turno,userAccount.id,service.CodigoServicio,service.TipoServicio);getTickets();"><span class="glyphicon glyphicon-ok"></span></button></td>
+                        <td ng-if="userAccount.Rol==1"><button class="btn btn-danger" ng-click="deshabilitar(ticket.id)">&times;</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <h3><span class="glyphicon glyphicon-inbox"></span> CLIENTES POR DESPACHAR</h3>
+            <table class="table table-striped">
+                <thead class="table-header">
+                    <tr>
+                        <td>TICKET</td>
+                        <td>DESPACHAR</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="ticket in ticketsFinishes" ng-if="ticket.usuario==userAccount.id" class="center">
+                        <td><span ng-repeat="service in servicios" ng-if="service.id==ticket.TipoServicio">{{ service.CodigoServicio }}-{{ ticket.Turno }}</span></td>
+                        <td><button ng-repeat="service in servicios" ng-if="service.id==ticket.TipoServicio" class="btn btn-success" ng-click="despachar(ticket.id)"><span class="glyphicon glyphicon-ok-sign"></span></button></td>
+                       
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+  <!-- Modal Turnos -->
+<div class="modal fade" id="myModalGenerateTurno" role="dialog" ng-controller="HomeController">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">SOLICITUD DE TURNO</h4>
+            </div>
+            <div class="modal-body">
+                @*<p>Some text in the modal.</p>*@
+                <div class="form-inline">
+                    <div class="form-group">
+                        <label> Seleccione el tipo de servicio a realizar</label>
+                        <select ng-model="tipoServicio" class="form-control">
+
+                            <option value="{{ servicio.id }}" ng-repeat="servicio in servicios">{{ servicio.TipoServicio }}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="setTurno(tipoServicio)">Generar</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>

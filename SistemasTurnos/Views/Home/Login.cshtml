@@ -498,7 +498,7 @@ body#LoginForm{ background-image:url("https://hdwallsource.com/img/2014/9/blur-2
                 <tbody>
                     <tr ng-repeat="ticket in tickets" class="center">
                         <td><span ng-repeat="service in servicios" ng-if="service.id==ticket.TipoServicio">{{ service.CodigoServicio }}-{{ ticket.Turno }}</span></td>
-                        <td><button  ng-repeat="service in servicios" ng-if="service.id==ticket.TipoServicio" ng-disabled="ticket.no!=1 && (userAccount.Rol!=1 || ticketsFinishes.length>1)" class="btn btn-success" ng-click="atender(ticket.id,ticket.Turno,userAccount.id,service.CodigoServicio,service.TipoServicio);getTickets();"><span class="glyphicon glyphicon-ok"></span></button></td>
+                        <td><button  ng-repeat="service in servicios" ng-if="service.id==ticket.TipoServicio" ng-disabled="ticket.no!=1 || userAccount.Rol!=1 && ticketsFinishes.length>=1" class="btn btn-success" ng-click="atender(ticket.id,ticket.Turno,userAccount.id,service.CodigoServicio,service.TipoServicio);getTickets();"><span class="glyphicon glyphicon-ok"></span></button></td>
                         <td ng-if="userAccount.Rol==1"><button class="btn btn-danger" ng-click="deshabilitar(ticket.id)">&times;</button></td>
                     </tr>
                 </tbody>

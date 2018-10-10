@@ -8,6 +8,7 @@ MyApp.controller('LoginController', function ($scope, $http) {
     $scope.allTicketsAtende = [];
     $scope.roles = [];
     $scope.users = [];
+    $scope.temp = [];
 
     $scope.userName = '';
     $scope.password = '';
@@ -69,6 +70,9 @@ MyApp.controller('LoginController', function ($scope, $http) {
                         
                     } else {
                         $scope.userAccount = res.data;
+                        $scope.comprobarTickets();
+                        
+                        
                     }
                     $scope.clear();
                 }, function errorCallback(error) {
@@ -77,6 +81,23 @@ MyApp.controller('LoginController', function ($scope, $http) {
                 });
         }
     };
+
+    $scope.comprobarTickets = function () {
+        $scope.temp = [];
+        $http({
+            method: 'POST',
+            url: '/Home/getTicketsFinishes'
+        }).then(function successCallback(res) {
+
+            res.data.forEach(function (e) {
+                if (e.usuario == $scope.userAccount.id) $scope.temp.push(e);
+            });
+            console.log('temp')
+            console.table($scope.temp)
+        }, function errorCallback(error) {
+            console.error(error);
+        });
+    }
 
     $scope.getTickets = function () {
         $scope.tickets = [];
@@ -138,6 +159,7 @@ MyApp.controller('LoginController', function ($scope, $http) {
             swal(tipoServicio, 'TURNO:' + turno, 'success');
             $scope.getTickets();
             $scope.getTicketsFinishes();
+            $scope.comprobarTickets();
         }, function errorCallback(error) {
             swal('', 'Ha ocurrido un error', 'error');
             console.error(error);
@@ -179,6 +201,7 @@ MyApp.controller('LoginController', function ($scope, $http) {
     
             $scope.getTicketsFinishes();
             $scope.getAllTicketsAtende();
+            $scope.comprobarTickets();
         }, function errorCallback(error) {
             console.error(error);
         });

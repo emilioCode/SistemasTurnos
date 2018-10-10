@@ -79,14 +79,18 @@ namespace SistemasTurnos.Controllers
             db.Turnos.Add(turno);
             db.SaveChanges();
 
+            var count = db.Turnos.Where(t => t.Fecha == fecha 
+            && t.TipoServicio == id 
+            && t.Hora_inicio==null).Count();
+
             var codService = db.Servicios.Where(s => s.id == id).FirstOrDefault();
 
             //var totalturnos = db.Turnos.Where(t => t.id == id && t.Habilitado == true
             // && t.Fecha == fecha /*&& t.Despachado != true*/).ToList();
 
             int mins = Convert.ToInt32(codService.TiempoEstimado);
-            var tiempoEstimado = mins * (order);
-
+            //var tiempoEstimado = mins * (order);
+            var tiempoEstimado = mins * (count - 1);
 
             return Json($"{ codService.CodigoServicio }-{ order } { tiempoEstimado }");
         }
